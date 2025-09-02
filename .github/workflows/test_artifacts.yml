@@ -17,7 +17,7 @@ jobs:
         suite: [SUITE1, SUITE2, SUITE3]
     steps:
       - name: Create Artifact
-        run: echo "Test ${{ matrix.suite }} for ${{ inputs.ComponentName }}" >> ./log/${{ matrix.suite }}
+        run: echo "Test ${{ matrix.suite }} for ${{ inputs.ComponentName }}" >> ${{ github.workspace }}/log/${{ matrix.suite }}
   Show-files:
     name: Show files of workspace
     runs-on: ubuntu-latest
@@ -27,10 +27,10 @@ jobs:
         run: |
           ls -l ${{ github.workspace }}
           mkdir -p ./combined_log/
-          cp -rv ./log/* ./combined_log/
+          cp -rv ${{ github.workspace }}/log/* ${{ github.workspace }}/combined_log/
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: "${{ inputs.ComponentName }} Combined Logs"
-          path: ./combined_log/
+          path: ${{ github.workspace }}/combined_log/
