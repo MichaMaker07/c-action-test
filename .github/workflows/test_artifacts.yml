@@ -3,9 +3,10 @@ name: Matrix workflow
 on: 
   workflow_dispatch:
     inputs:
-      ComponentName: 'Name der Componente'
-      required: true
-      type: string
+      ComponentName:
+        description: 'Name der Componente'
+        required: true
+        type: string
 
 jobs:
   test-matrix:
