@@ -1,0 +1,35 @@
+name: Matrix workflow
+
+on: 
+  workflow_dispatch:
+    inputs:
+      ComponentName: 'Name der Componente'
+      required: true
+      type: string
+
+jobs:
+  test-matrix:
+    name: Test suite testing
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        suite: [SUITE1, SUITE2, SUITE3]
+    steps:
+      - name: Create Artifact
+        run: echo "Test ${{ matrix.suite }} for ${{ inputs.ComponentName }}" >> ./log/${{ matrix.suite }}
+  Show-files:
+    name: Show files of workspace
+    runs-on: ubuntu-latest
+    needs: test-matrix
+    steps:
+      - name: List workspace
+        run: |
+          ls -l ${{ github.workspace }}
+          mkdir -p ./combined_log/
+          cp -rv ./log/* ./combined_log/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: "${{ inputs.ComponentName }} Combined Logs
+          path: ./combined_log/
